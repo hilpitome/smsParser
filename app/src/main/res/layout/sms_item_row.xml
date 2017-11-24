@@ -14,14 +14,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/sd_number_title"
+                android:id="@+id/title"
                 android:text="SD NUMBER"
                 android:layout_marginRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/sd_number_text"
-                android:text="783XXXXXX"/>
+                android:text="0778XXXXXX"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/vente_serveur_text"
-                android:text="543"/>
+                android:text="598"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,14 +62,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/releve_serveur_title"
-                android:text="RELEVE SERVEUR"
+                android:id="@+id/sd_number_title"
+                android:text="TOTAL CAISSE"
                 android:layout_marginRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/releve_serveur_text"
-                android:text="920"/>
+                android:id="@+id/Total_Caisse_text"
+                android:text="543"/>
         </LinearLayout>
 
     </LinearLayout>

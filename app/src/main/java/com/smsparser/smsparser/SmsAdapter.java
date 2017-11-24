@@ -36,7 +36,7 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.MyViewHolder>  {
         holder.sdNumber.setText(smsData.getSdNumber());
         holder.cashRevu.setText(smsData.getCashRecu());
         holder.venteServeur.setText(smsData.getVenteServuer());
-        holder.releveServuer.setText(smsData.getReleveServuer());
+        holder.totalCaisse.setText(smsData.getTotalCaisse());
 
     }
 
@@ -45,7 +45,7 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.MyViewHolder>  {
         return smsDataList.size();
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView sdNumber, cashRevu, venteServeur,releveServuer;
+        public TextView sdNumber, cashRevu, venteServeur,totalCaisse ;
 
 
         public MyViewHolder(View view) {
@@ -54,7 +54,7 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.MyViewHolder>  {
             sdNumber = (TextView) view.findViewById(R.id.sd_number_text);
             cashRevu = (TextView) view.findViewById(R.id.cash_recu_text);
             venteServeur = (TextView) view.findViewById(R.id.vente_serveur_text);
-            releveServuer = (TextView) view.findViewById(R.id.releve_serveur_text);
+            totalCaisse  = (TextView) view.findViewById(R.id.Total_Caisse_text);
 
         }
 

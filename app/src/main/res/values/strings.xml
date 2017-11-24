@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">SmsParser</string>
+    <string name="rapport_sms_title_text">view rapport SMSs</string>
+    <string name="mesages_operatuer_title_text">view messages operateur</string>
+    <string name="sms_rapport">rapport SMSs</string>
+    <string name="sms_operateur">messages operateur</string>
+    <string-array name="spinner_list_item_array">
+        <item>rapport SMSs</item>
+        <item>messages operateur</item>
+    </string-array>
+
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

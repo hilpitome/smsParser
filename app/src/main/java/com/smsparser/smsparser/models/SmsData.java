@@ -5,12 +5,13 @@ package com.smsparser.smsparser.models;
  */
 
 public class SmsData {
-    private String sdNumber, cashRecu, venteServuer, releveServuer;
-    public SmsData(String sdNumber, String cashRecu, String venteServuer, String releveServuer){
+    private String sdNumber, cashRecu, venteServuer, totalCaisse;
+    public SmsData(String sdNumber, String cashRecu, String venteServuer, String totalCaisse){
         this.sdNumber = sdNumber;
         this.cashRecu = cashRecu;
         this.venteServuer = venteServuer;
-        this.releveServuer = releveServuer;
+        this.totalCaisse  = totalCaisse ;
+
     }
 
     public String getSdNumber() {
@@ -37,11 +38,13 @@ public class SmsData {
         this.venteServuer = venteServuer;
     }
 
-    public String getReleveServuer() {
-        return releveServuer;
+    public String getTotalCaisse() {
+        return totalCaisse ;
     }
 
-    public void setReleveServuer(String releveServuer) {
-        this.releveServuer = releveServuer;
+    public void setTotalCaisse(String totalCaisse ) {
+        this.totalCaisse  = totalCaisse ;
     }
+
+
 }

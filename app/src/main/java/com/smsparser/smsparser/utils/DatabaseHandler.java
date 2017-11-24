@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.smsparser.smsparser.models.MessagesOperatuerData;
 import com.smsparser.smsparser.models.SmsData;
@@ -20,7 +21,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper{
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     // Database Name
     private static final String DATABASE_NAME = "rapportManager";
@@ -31,16 +32,19 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     // Common Table Columns names
     private static final String ID = "_id";
     private static final String SD_NUMBER = "sd_number";
+
     // rapport_journalier column names
 
     private static final String CASH_RECU = "cash_recu";
     private static final String VENTE_SERVEUR = "vente_serveur";
-    private static final String RELEVE_SERVEUR = "releve_serveur";
+    private static final String TOTAL_CAISSE  = "total_caisse ";
 
     // messages_operatuer column names
     private static final String DATE = "date";
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
+    private static final String PHONE_NUMBER = "phone_number";
+    private static final String SIM_NUMBER = "sim_number";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,10 +55,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_RAPPORT_TABLE = "CREATE TABLE " + TABLE_RAPPORT_JOURNALIER  + "("
                 + ID + " INTEGER PRIMARY KEY," + SD_NUMBER + " TEXT,"
-                + CASH_RECU + " TEXT," + VENTE_SERVEUR  + " TEXT," +RELEVE_SERVEUR+ " TEXT"+")";
+                + CASH_RECU + " TEXT," + VENTE_SERVEUR  + " TEXT," +TOTAL_CAISSE + " TEXT"+")";
+
         String CREATE_TABLE_MESSAGES_OPERATUER = "CREATE TABLE " + TABLE_MESSAGES_OPERATUER  + "("
                 + ID + " INTEGER PRIMARY KEY," + DATE + " TEXT,"
-                + SD_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT"+")";
+                + PHONE_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT,"+ SIM_NUMBER+ " TEXT"+")";
         sqLiteDatabase.execSQL(CREATE_RAPPORT_TABLE);
         sqLiteDatabase.execSQL(CREATE_TABLE_MESSAGES_OPERATUER);
 
@@ -80,27 +85,29 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         contentValues.put(SD_NUMBER, smsData.getSdNumber() );
         contentValues.put(CASH_RECU, smsData.getCashRecu());
         contentValues.put(VENTE_SERVEUR,smsData.getVenteServuer());
-        contentValues.put(RELEVE_SERVEUR, smsData.getReleveServuer());
+        contentValues.put(TOTAL_CAISSE , smsData.getTotalCaisse());
         db.insert(TABLE_RAPPORT_JOURNALIER , null, contentValues);
         db.close();
     }
-    public List<SmsData> getRecords(){
+    public List<SmsData> getSmsRapportData(){
 
         List<SmsData> records = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         String query = "SELECT * FROM "+TABLE_RAPPORT_JOURNALIER ;
         Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()) {
-            // Extract data.
+        if (cursor != null){
+            while (cursor.moveToNext()) {
+                // Extract data.
 
-            int id = cursor.getInt(cursor.getColumnIndex(ID));
-            String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
-            String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
-            String venteServeur = cursor.getString(cursor.getColumnIndex(VENTE_SERVEUR));
-            String releveServuer = cursor.getString(cursor.getColumnIndex(RELEVE_SERVEUR));
-
-            records.add(new SmsData(sdNumber, cashRecu, venteServeur, releveServuer));
+                int id = cursor.getInt(cursor.getColumnIndex(ID));
+                String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
+                String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
+                String venteServeur = cursor.getString(cursor.getColumnIndex(VENTE_SERVEUR));
+                String totalCaisse  = cursor.getString(cursor.getColumnIndex(TOTAL_CAISSE ));
+                records.add(new SmsData(sdNumber, cashRecu, venteServeur, totalCaisse));
+            }
         }
+
 
         db.close();
 
@@ -111,10 +118,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SD_NUMBER, messagesOperatuerData.getSdNumber() );
-        contentValues.put(TITLE, messagesOperatuerData.getTitle());
         contentValues.put(DATE, messagesOperatuerData.getDate());
+        contentValues.put(TITLE, messagesOperatuerData.getTitle());
+        contentValues.put(PHONE_NUMBER, messagesOperatuerData.getPhoneNumber());
         contentValues.put(DESCRIPTION, messagesOperatuerData.getDescription());
+        contentValues.put(SIM_NUMBER, messagesOperatuerData.getSimNumber());
+
+
         db.insert(TABLE_MESSAGES_OPERATUER , null, contentValues);
         db.close();
     }
@@ -128,12 +138,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             // Extract data.
 
             int id = cursor.getInt(cursor.getColumnIndex(ID));
-            String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
+            String phoneNumber = cursor.getString(cursor.getColumnIndex(PHONE_NUMBER));
             String date = cursor.getString(cursor.getColumnIndex(DATE));
             String title = cursor.getString(cursor.getColumnIndex(TITLE));
             String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
-
-            records.add(new MessagesOperatuerData(date, title, description, sdNumber));
+            String simCard = cursor.getString(cursor.getColumnIndex(SIM_NUMBER));
+            Log.i("handler", simCard);
+            records.add(new MessagesOperatuerData(date, title, description, phoneNumber, simCard));
         }
 
         db.close();

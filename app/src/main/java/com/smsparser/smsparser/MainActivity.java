@@ -1,50 +1,81 @@
 package com.smsparser.smsparser;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-import com.smsparser.smsparser.models.SmsData;
-import com.smsparser.smsparser.utils.DatabaseHandler;
-
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-    DatabaseHandler databaseHandler;
-    TextView noTextsTv;
-    RecyclerView recyclerView;
-    List<SmsData> records;
-    SmsAdapter smsAdapter;
-
+public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
+    private NavigationView navigationView;
+    private int navItemId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        noTextsTv = (TextView) findViewById(R.id.no_sms_tv);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        databaseHandler = new DatabaseHandler(this);
-        records = databaseHandler.getRecords();
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        if(records.size()<1){
-            // do nothing
-        } else {
-            noTextsTv.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        displayView(item.getItemId());
+        navItemId = item.getItemId();
+
+        return true;
+    }
+    public void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
 
 
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        switch (viewId) {
+            case R.id.drawer_sms_rapport:
+                fragment = new RapportSmsFragment();
+                title = getResources().getString(sms_rapport);
+                break;
 
-            recyclerView.setLayoutManager(layoutManager);
+            case R.id.drawer_sms_msg_operateur:
+                fragment = new MessagesOperatuerFragment();
+                title = getResources().getString(sms_operateur);
+                break;
+            default:
+                break;
+        }
 
-            smsAdapter = new SmsAdapter(this, records);
 
-            recyclerView.setAdapter(smsAdapter);
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frame, fragment);
+            ft.commit();
+        }
+
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setSubtitle(title);
+        }
 
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
         }
     }
+
 }
