@@ -34,7 +34,7 @@ public class MessagesOperatuerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.layout_operateur_item_row, container, false);
+        View view = inflater.inflate(R.layout.fragment_messages_operatuer, container, false);
         intitalizeView(view);
         return view;
     }

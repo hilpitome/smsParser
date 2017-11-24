@@ -10,8 +10,7 @@ public class SmsData {
         this.sdNumber = sdNumber;
         this.cashRecu = cashRecu;
         this.venteServuer = venteServuer;
-        this.totalCaisse  = totalCaisse ;
-
+        this.totalCaisse  = totalCaisse;
     }
 
     public String getSdNumber() {
@@ -39,11 +38,11 @@ public class SmsData {
     }
 
     public String getTotalCaisse() {
-        return totalCaisse ;
+        return totalCaisse;
     }
 
     public void setTotalCaisse(String totalCaisse ) {
-        this.totalCaisse  = totalCaisse ;
+        this.totalCaisse  = totalCaisse;
     }
 
 

@@ -2,7 +2,6 @@ package com.smsparser.smsparser;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,7 +36,7 @@ public class RapportSmsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.layout_rapport_sms, container, false);
+        View view = inflater.inflate(R.layout.fragment_rapport_sms, container, false);
         intitalizeView(view);
         return view;
     }
@@ -59,7 +58,6 @@ public class RapportSmsFragment extends Fragment {
             smsAdapter = new SmsAdapter(getActivity(), records);
 
             recyclerView.setAdapter(smsAdapter);
-
 
         }
     }

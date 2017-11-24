@@ -37,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     private static final String CASH_RECU = "cash_recu";
     private static final String VENTE_SERVEUR = "vente_serveur";
-    private static final String TOTAL_CAISSE  = "total_caisse ";
+    private static final String TOTAL_CAISSE  = "total_caisse";
 
     // messages_operatuer column names
     private static final String DATE = "date";
@@ -78,14 +78,14 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     // add a new row
     public void addParsedSmsData(SmsData smsData){
 
-
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SD_NUMBER, smsData.getSdNumber() );
         contentValues.put(CASH_RECU, smsData.getCashRecu());
-        contentValues.put(VENTE_SERVEUR,smsData.getVenteServuer());
         contentValues.put(TOTAL_CAISSE , smsData.getTotalCaisse());
+        contentValues.put(VENTE_SERVEUR,smsData.getVenteServuer());
+
         db.insert(TABLE_RAPPORT_JOURNALIER , null, contentValues);
         db.close();
     }
@@ -95,17 +95,16 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         String query = "SELECT * FROM "+TABLE_RAPPORT_JOURNALIER ;
         Cursor cursor = db.rawQuery(query, null);
-        if (cursor != null){
-            while (cursor.moveToNext()) {
-                // Extract data.
 
-                int id = cursor.getInt(cursor.getColumnIndex(ID));
-                String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
-                String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
-                String venteServeur = cursor.getString(cursor.getColumnIndex(VENTE_SERVEUR));
-                String totalCaisse  = cursor.getString(cursor.getColumnIndex(TOTAL_CAISSE ));
-                records.add(new SmsData(sdNumber, cashRecu, venteServeur, totalCaisse));
-            }
+        while (cursor.moveToNext()) {
+            // Extract data.
+
+            int id = cursor.getInt(cursor.getColumnIndex(ID));
+            String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
+            String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
+            String venteServeur = cursor.getString(cursor.getColumnIndex(VENTE_SERVEUR));
+            String totalCaisse  = cursor.getString(cursor.getColumnIndex(TOTAL_CAISSE));
+            records.add(new SmsData(sdNumber, cashRecu, venteServeur, totalCaisse));
         }
 
 
@@ -132,7 +131,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public List<MessagesOperatuerData> getMessagesOperatuer(){
         List<MessagesOperatuerData> records = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM "+TABLE_MESSAGES_OPERATUER ;
+        String query = "SELECT * FROM "+TABLE_MESSAGES_OPERATUER;
+
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             // Extract data.
@@ -143,7 +143,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             String title = cursor.getString(cursor.getColumnIndex(TITLE));
             String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
             String simCard = cursor.getString(cursor.getColumnIndex(SIM_NUMBER));
-            Log.i("handler", simCard);
             records.add(new MessagesOperatuerData(date, title, description, phoneNumber, simCard));
         }
 

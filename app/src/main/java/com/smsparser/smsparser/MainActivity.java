@@ -13,9 +13,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import static com.smsparser.smsparser.R.string.sms_operateur;
+import static com.smsparser.smsparser.R.string.sms_rapport;
+
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener{
     private NavigationView navigationView;
     private int navItemId;
+    private static final String NAV_ITEM_ID = "nav_index";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,18 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // default to smsRapport
+        /**
+         * start with the home menu
+         */
+
+        if (null != savedInstanceState) {
+            navItemId = savedInstanceState.getInt(NAV_ITEM_ID,R.id.drawer_sms_rapport);
+        } else {
+            navItemId =R.id.drawer_sms_rapport;
+        }
+        displayView(navItemId);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -76,6 +92,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
         }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(NAV_ITEM_ID, navItemId);
+
     }
 
 }
