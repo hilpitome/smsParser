@@ -15,6 +15,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
+                android:textColor="@color/orange_400"
                 android:text="SD NUMBER"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -32,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/cash_recu_title"
+                android:textColor="@color/orange_400"
                 android:text="CASH RECU"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -48,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/vente_serveur_title"
+                android:textColor="@color/orange_400"
                 android:text="VENTE SERVEUR"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -63,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/sd_number_title"
+                android:textColor="@color/orange_400"
                 android:text="TOTAL CAISSE"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -71,7 +75,7 @@
                 android:id="@+id/Total_Caisse_text"
                 android:text="543"/>
         </LinearLayout>
-
+        <include layout="@layout/item_divider"/>
     </LinearLayout>
-    <include layout="@layout/item_divider"/>
+
 </android.support.v7.widget.CardView>

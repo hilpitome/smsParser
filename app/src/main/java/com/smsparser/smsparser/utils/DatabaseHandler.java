@@ -136,7 +136,6 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             // Extract data.
-
             int id = cursor.getInt(cursor.getColumnIndex(ID));
             String phoneNumber = cursor.getString(cursor.getColumnIndex(PHONE_NUMBER));
             String date = cursor.getString(cursor.getColumnIndex(DATE));

@@ -47,15 +47,20 @@ public class IncomingSms extends BroadcastReceiver {
      */
     private static final String TAG = IncomingSms.class.getSimpleName();
 
-//    private String mUrl = "http://telecomtransborder.com/caurix/API/SmsReports.php";
-    private String mUrl = "http://192.168.1.3/index.php";
+    private String mUrl = "http://telecomtransborder.com/caurix/API/SmsReports.php";
+//    private String mUrl = "http://192.168.1.4/index.php";
 
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     Context context;
     DatabaseHandler databaseHandler;
+    String[] months;
+
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        months = new String[]{"Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+
         this.context = context;
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
@@ -70,10 +75,8 @@ public class IncomingSms extends BroadcastReceiver {
                     String senderNo = currentSMS.getDisplayOriginatingAddress();
 
                     String message = currentSMS.getDisplayMessageBody();
-                    Date datetime = new Date();
-                    String now = sdf.format(datetime);
+
                     if (message.toLowerCase().contains("rapport")) {
-//                        Toast.makeText(context, message + " " + senderNo, Toast.LENGTH_LONG).show();
 
                         String[] messageArray = message.split("\\*");
 
@@ -90,21 +93,8 @@ public class IncomingSms extends BroadcastReceiver {
 
 
                     } else if (message.toLowerCase().contains("la transaction")) {
-                        String title = "", description = message, date = "", phoneNumber = "";
-//                        String titles[] = {
-//                                "Pas client Orange Money",
-//                                "Code secret en retard",
-//                                "Maximum de transactions par mois",
-//                                "Depassement de plafond",
-//                                "Solde Insuffisant"
-//                        };
-//                        String patterns[] = {
-//                                "le destinataire n'est pas un client orange money.",
-//                                "a ete annulee car il",
-//                                "montant maximum cumule de transactions par mois",
-//                                "depasse le solde minimal autorise",
-//                                "solde de votre compte ne vous permet pasd effectuer cette operation"
-//                        };
+                        String title = "", description = message, formatedDate = "", phoneNumber = "";
+
                         // assign the title
                         if (message.toLowerCase().contains("le destinataire n'est pas un client orange money.")) {
                             title = "Pas client Orange Money";
@@ -138,14 +128,21 @@ public class IncomingSms extends BroadcastReceiver {
                                    Log.e("phone", phoneNumber);
                                }
                                if (substring.toLowerCase().equals("ci") || substring.toLowerCase().equals("co") || substring.toLowerCase().equals("mp") ) {
-                                    Log.e("date",messageArray[i]);
-                                   date = messageArray[i].substring(2, messageArray[i].length());
+                                   String date = messageArray[i].substring(2, messageArray[i].length());
+                                   String year = "20"+date.substring(0, 2);
+                                   String monthNumber = date.substring(2,4);
+                                   String day = date.substring(4,6);
+                                   String hour = date.substring(7,9) + ":"+  date.substring(8,10);
+                                   int monthIndex = Integer.valueOf(monthNumber)-1;
+                                   String monthInWords = months[monthIndex];
+                                   formatedDate = monthInWords+" "+day+" "+year+" "+hour;
+                                   Log.e("date",formatedDate);
                                }
                            }
                         }
 
                         MessagesOperatuerData messagesOperatuerData = new MessagesOperatuerData();
-                        messagesOperatuerData.setDate(date);
+                        messagesOperatuerData.setDate(formatedDate);
                         messagesOperatuerData.setTitle(title);
                         messagesOperatuerData.setDescription(description);
                         messagesOperatuerData.setPhoneNumber(phoneNumber);
@@ -188,7 +185,7 @@ public class IncomingSms extends BroadcastReceiver {
             if(params[0] instanceof SmsData){
 
                 SmsData smsData = (SmsData) params[0];
-                Log.e("Total_Caisse ", smsData.getTotalCaisse().getClass().getName());
+                Log.e("Total_Caisse ", smsData.getTotalCaisse());
                 formBody =   new FormBody.Builder()
                         .add("SD_Number", smsData.getSdNumber())
                         .add("Cash_recu", smsData.getCashRecu())
@@ -207,7 +204,6 @@ public class IncomingSms extends BroadcastReceiver {
                         .build();
             }
 
-
             Request request = new Request.Builder()
                     .url(mUrl)
                     .post(formBody)
@@ -220,6 +216,7 @@ public class IncomingSms extends BroadcastReceiver {
                 e.printStackTrace();
 
             }
+
             return resp;
         }
 

@@ -49,8 +49,6 @@ public class MessagesOperatuerAdapter extends RecyclerView.Adapter<MessagesOpera
         }
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView dateText, titleText, description, sdNumber, simNumber;
-
-
             public MyViewHolder(View view) {
                 super(view);
                 dateText = (TextView) view.findViewById(R.id.date_text);

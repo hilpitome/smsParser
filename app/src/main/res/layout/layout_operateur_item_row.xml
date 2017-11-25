@@ -17,6 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/date_title"
+                android:textColor="@color/orange_400"
                 android:text="DATE"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -36,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/title_title"
+                android:textColor="@color/orange_400"
                 android:text="TITLE"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -54,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/description_title"
+                android:textColor="@color/orange_400"
                 android:text="DESCRIPTION"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -75,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/phone_number"
                 android:text="PHONE NUMBER"
+                android:textColor="@color/orange_400"
                 android:layout_marginRight="8dp"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -92,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/sim_number_title"
+                android:textColor="@color/orange_400"
                 android:text="SIM NUMBER"
                 android:layout_marginRight="8dp"/>
             <TextView
@@ -102,5 +107,6 @@
                 android:paddingStart="16dp"
                 android:paddingLeft="16dp"/>
         </LinearLayout>
+        <include layout="@layout/item_divider"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import static com.smsparser.smsparser.R.string.sms_operateur;
@@ -28,17 +29,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // default to smsRapport
-        /**
-         * start with the home menu
-         */
 
-        if (null != savedInstanceState) {
-            navItemId = savedInstanceState.getInt(NAV_ITEM_ID,R.id.drawer_sms_rapport);
-        } else {
-            navItemId =R.id.drawer_sms_rapport;
-        }
-        displayView(navItemId);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -46,11 +37,21 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // default to msgsOperateur
+
+        if (null != savedInstanceState) {
+            navItemId = savedInstanceState.getInt(NAV_ITEM_ID,R.id.drawer_sms_rapport);
+        } else {
+            navItemId =R.id.drawer_sms_msg_operateur;
+        }
+
+        displayView(navItemId);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
+
         displayView(item.getItemId());
         navItemId = item.getItemId();
 
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     public void displayView(int viewId) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
-
 
         switch (viewId) {
             case R.id.drawer_sms_rapport:
@@ -84,13 +84,22 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         // set the toolbar title
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setSubtitle(title);
+            getSupportActionBar().setTitle(title);
         }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
     @Override
