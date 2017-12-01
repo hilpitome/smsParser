@@ -21,7 +21,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper{
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "rapportManager";
@@ -45,6 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static final String DESCRIPTION = "description";
     private static final String PHONE_NUMBER = "phone_number";
     private static final String SIM_NUMBER = "sim_number";
+    private static final String MESSAGE = "message";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,7 +60,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         String CREATE_TABLE_MESSAGES_OPERATUER = "CREATE TABLE " + TABLE_MESSAGES_OPERATUER  + "("
                 + ID + " INTEGER PRIMARY KEY," + DATE + " TEXT,"
-                + PHONE_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT,"+ SIM_NUMBER+ " TEXT"+")";
+                + PHONE_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT,"+ SIM_NUMBER+ " TEXT,"+MESSAGE+" TEXT"+")";
         sqLiteDatabase.execSQL(CREATE_RAPPORT_TABLE);
         sqLiteDatabase.execSQL(CREATE_TABLE_MESSAGES_OPERATUER);
 
@@ -122,7 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         contentValues.put(PHONE_NUMBER, messagesOperatuerData.getPhoneNumber());
         contentValues.put(DESCRIPTION, messagesOperatuerData.getDescription());
         contentValues.put(SIM_NUMBER, messagesOperatuerData.getSimNumber());
-
+        contentValues.put(MESSAGE, messagesOperatuerData.getMessage());
 
         db.insert(TABLE_MESSAGES_OPERATUER , null, contentValues);
         db.close();
@@ -142,7 +143,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             String title = cursor.getString(cursor.getColumnIndex(TITLE));
             String description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
             String simCard = cursor.getString(cursor.getColumnIndex(SIM_NUMBER));
-            records.add(new MessagesOperatuerData(date, title, description, phoneNumber, simCard));
+            String message = cursor.getString(cursor.getColumnIndex(MESSAGE));
+            records.add(new MessagesOperatuerData(date, title, description, phoneNumber, simCard, message));
         }
 
         db.close();

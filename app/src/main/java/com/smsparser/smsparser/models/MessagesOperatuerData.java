@@ -5,16 +5,16 @@ package com.smsparser.smsparser.models;
  */
 
 public class MessagesOperatuerData {
-    private String phoneNumber, title, description, date, simNumber;
+    private String phoneNumber, title, description, date, simNumber, message;
 
     public MessagesOperatuerData(){};
 
-    public MessagesOperatuerData(String date,String title, String description, String phoneNumber, String simNumber){
+    public MessagesOperatuerData(String date,String title, String description, String phoneNumber, String simNumber, String message){
 
         this.date=date;
         this.phoneNumber = phoneNumber;
         this.simNumber = simNumber;
-
+        this.message = message;
         this.title = title;
         this.description = description;
     }
@@ -57,5 +57,13 @@ public class MessagesOperatuerData {
 
     public void setSimNumber(String simNumber) {
         this.simNumber = simNumber;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

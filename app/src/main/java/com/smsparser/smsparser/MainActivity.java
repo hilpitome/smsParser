@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.smsparser.smsparser.utils.PrefUtils;
+
 import static com.smsparser.smsparser.R.string.sms_operateur;
 import static com.smsparser.smsparser.R.string.sms_rapport;
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private NavigationView navigationView;
     private int navItemId;
     private static final String NAV_ITEM_ID = "nav_index";
+    private PrefUtils prefUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        prefUtils = new PrefUtils(this);
+
+        if(!prefUtils.hasPhoneNumer())  {
+            startActivity(new Intent(MainActivity.this, PhoneNumberActivity.class));
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
