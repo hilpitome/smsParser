@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmsParser</string>
+    <string name="app_name">msgprocessor3.0.5</string>
     <string name="rapport_sms_title_text">view rapport SMSs</string>
     <string name="mesages_operatuer_title_text">view messages operateur</string>
     <string name="sms_rapport">rapport SMSs</string>
@@ -12,4 +12,5 @@
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="add_agent">add an agent</string>
 </resources>

@@ -5,8 +5,9 @@ package com.smsparser.smsparser.models;
  */
 
 public class SmsData {
-    private String sdNumber, cashRecu, venteServuer, totalCaisse;
-    public SmsData(String sdNumber, String cashRecu, String venteServuer, String totalCaisse){
+    private String date, sdNumber, cashRecu, venteServuer, totalCaisse;
+    public SmsData(String date, String sdNumber, String cashRecu, String venteServuer, String totalCaisse){
+        this.date = date;
         this.sdNumber = sdNumber;
         this.cashRecu = cashRecu;
         this.venteServuer = venteServuer;
@@ -45,5 +46,11 @@ public class SmsData {
         this.totalCaisse  = totalCaisse;
     }
 
+    public String getDate() {
+        return date;
+    }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

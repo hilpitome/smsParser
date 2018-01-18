@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         prefUtils = new PrefUtils(this);
 
         if(!prefUtils.hasPhoneNumer())  {

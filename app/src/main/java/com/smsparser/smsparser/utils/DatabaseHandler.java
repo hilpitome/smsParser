@@ -21,7 +21,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper{
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "rapportManager";
@@ -55,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_RAPPORT_TABLE = "CREATE TABLE " + TABLE_RAPPORT_JOURNALIER  + "("
-                + ID + " INTEGER PRIMARY KEY," + SD_NUMBER + " TEXT,"
+                + ID + " INTEGER PRIMARY KEY," + DATE + " TEXT,"+ SD_NUMBER + " TEXT,"
                 + CASH_RECU + " TEXT," + VENTE_SERVEUR  + " TEXT," +TOTAL_CAISSE + " TEXT"+")";
 
         String CREATE_TABLE_MESSAGES_OPERATUER = "CREATE TABLE " + TABLE_MESSAGES_OPERATUER  + "("
@@ -86,6 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         contentValues.put(CASH_RECU, smsData.getCashRecu());
         contentValues.put(TOTAL_CAISSE , smsData.getTotalCaisse());
         contentValues.put(VENTE_SERVEUR,smsData.getVenteServuer());
+        contentValues.put(DATE, smsData.getDate());
 
         db.insert(TABLE_RAPPORT_JOURNALIER , null, contentValues);
         db.close();
@@ -105,7 +106,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
             String venteServeur = cursor.getString(cursor.getColumnIndex(VENTE_SERVEUR));
             String totalCaisse  = cursor.getString(cursor.getColumnIndex(TOTAL_CAISSE));
-            records.add(new SmsData(sdNumber, cashRecu, venteServeur, totalCaisse));
+            String date  = cursor.getString(cursor.getColumnIndex(DATE));
+            records.add(new SmsData(date, sdNumber, cashRecu, venteServeur, totalCaisse));
         }
 
 

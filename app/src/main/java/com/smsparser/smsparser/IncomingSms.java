@@ -57,7 +57,6 @@ public class IncomingSms extends BroadcastReceiver {
     private static final String TAG = IncomingSms.class.getSimpleName();
 
     private String mUrl = "";
-//    private String mUrl = "http://192.168.1.4/index.php";
 
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     Context context;
@@ -94,11 +93,23 @@ public class IncomingSms extends BroadcastReceiver {
 
                         String[] messageArray = message.split("\\*");
 
+                        String unformateDate =  messageArray[1];
+
+                        // Changing ddmmyyyy to dd-mm-yyyy
+                        String dd= unformateDate.substring(0,2);
+                        String mm = unformateDate.substring(2,4);
+                        String yyyy = unformateDate.substring(4,8);
+
+
+
+                        String formatedDate = dd+"-"+mm+"-"+yyyy;
+
                         SmsData smsData = new SmsData(
+                                formatedDate,
                                 senderNo,
-                                messageArray[1],
                                 messageArray[2],
-                                messageArray[3]
+                                messageArray[3],
+                                messageArray[4]
                         );
 
                         databaseHandler.addParsedSmsData(smsData);
@@ -132,8 +143,8 @@ public class IncomingSms extends BroadcastReceiver {
                             description = "Le Client n'a pas un solde suffisant pour le montant de la transaction";
                         }
                         if (message.toLowerCase().contains("montant maximum autorise")){
-                            title = "Total maximum pa mois";
-                            description = "Le cumul des montants de translation de transaction a atteint le maximum pour le mois";
+                            title = "Total maximum par mois";
+                            description = "Le cumul des montants de transaction a atteint le maximum pour le mois";
                         }
 
                         // split message/description to find date and phone number
@@ -211,8 +222,9 @@ public class IncomingSms extends BroadcastReceiver {
             if(params[0] instanceof SmsData){
 
                 SmsData smsData = (SmsData) params[0];
-                Log.e("Total_Caisse ", smsData.getTotalCaisse());
+                Log.e("Total_Caisse ", smsData.getDate());
                 formBody =   new FormBody.Builder()
+                        .add("date", smsData.getDate())
                         .add("SD_Number", smsData.getSdNumber())
                         .add("Cash_recu", smsData.getCashRecu())
                         .add("Vente_Serveur", smsData.getVenteServuer())
@@ -254,7 +266,7 @@ public class IncomingSms extends BroadcastReceiver {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i(TAG, s);
+            Log.e(TAG, s);
             Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
         }
     }
