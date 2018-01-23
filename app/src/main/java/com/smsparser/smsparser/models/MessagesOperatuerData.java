@@ -5,7 +5,9 @@ package com.smsparser.smsparser.models;
  */
 
 public class MessagesOperatuerData {
-    private String phoneNumber, title, description, date, simNumber, message;
+    private String phoneNumber, title, description, date, simNumber, message, isOnline;
+
+    private int sqliteId;
 
     public MessagesOperatuerData(){};
 
@@ -17,6 +19,7 @@ public class MessagesOperatuerData {
         this.message = message;
         this.title = title;
         this.description = description;
+        this.isOnline = isOnline;
     }
 
     public String getPhoneNumber() {
@@ -65,5 +68,21 @@ public class MessagesOperatuerData {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(String isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public int getSqliteId() {
+        return sqliteId;
+    }
+
+    public void setSqliteId(int sqliteId) {
+        this.sqliteId = sqliteId;
     }
 }

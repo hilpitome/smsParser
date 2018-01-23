@@ -5,13 +5,16 @@ package com.smsparser.smsparser.models;
  */
 
 public class SmsData {
-    private String date, sdNumber, cashRecu, venteServuer, totalCaisse;
+    private String date, sdNumber, cashRecu, venteServuer, totalCaisse, isOnline;
+    private int sqliteId;
+    public SmsData(){};
     public SmsData(String date, String sdNumber, String cashRecu, String venteServuer, String totalCaisse){
         this.date = date;
         this.sdNumber = sdNumber;
         this.cashRecu = cashRecu;
         this.venteServuer = venteServuer;
         this.totalCaisse  = totalCaisse;
+        this.isOnline = isOnline;
     }
 
     public String getSdNumber() {
@@ -52,5 +55,21 @@ public class SmsData {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(String isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public int getSqliteId() {
+        return sqliteId;
+    }
+
+    public void setSqliteId(int sqliteId) {
+        this.sqliteId = sqliteId;
     }
 }

@@ -1,16 +1,12 @@
-package com.smsparser.smsparser;
+package com.smsparser.smsparser.services;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,23 +17,10 @@ import com.smsparser.smsparser.utils.DatabaseHandler;
 import com.smsparser.smsparser.utils.PrefUtils;
 import com.smsparser.smsparser.utils.SmsParserSecrets;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.security.Timestamp;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -59,19 +42,17 @@ public class IncomingSms extends BroadcastReceiver {
     private String mUrl = "";
 
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    Context context;
-    DatabaseHandler databaseHandler;
-    String[] months;
-    ArrayList numbers;
-        PrefUtils prefUtils;
-
-    TelephonyManager telemananger;
+    private Context context;
+    private DatabaseHandler databaseHandler;
+    private PrefUtils prefUtils;
+    private int currentSqliteId;
+    private String currentObject;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        months = new String[]{"Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
-        telemananger = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        numbers = new ArrayList<String>();
+        String[] months = new String[]{"Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+
+
         prefUtils = new PrefUtils(context);
         this.context = context;
         Bundle bundle = intent.getExtras();
@@ -100,8 +81,6 @@ public class IncomingSms extends BroadcastReceiver {
                         String mm = unformateDate.substring(2,4);
                         String yyyy = unformateDate.substring(4,8);
 
-
-
                         String formatedDate = dd+"-"+mm+"-"+yyyy;
 
                         SmsData smsData = new SmsData(
@@ -112,7 +91,9 @@ public class IncomingSms extends BroadcastReceiver {
                                 messageArray[4]
                         );
 
-                        databaseHandler.addParsedSmsData(smsData);
+
+
+                        currentSqliteId = (int) databaseHandler.addParsedSmsData(smsData);
                         SendToMySqlTask sendToMySqlTask = new SendToMySqlTask();
                         sendToMySqlTask.execute(smsData);
 
@@ -185,7 +166,7 @@ public class IncomingSms extends BroadcastReceiver {
                         messagesOperatuerData.setSimNumber(senderNo);
                         messagesOperatuerData.setMessage(message);
 
-                        databaseHandler.addMessagesOperatuer(messagesOperatuerData);
+                        currentSqliteId = (int) databaseHandler.addMessagesOperatuer(messagesOperatuerData);
                         SendToMySqlTask sendToMySqlTask = new SendToMySqlTask();
 
                         sendToMySqlTask.execute(messagesOperatuerData);
@@ -220,7 +201,7 @@ public class IncomingSms extends BroadcastReceiver {
             RequestBody formBody = null;
 
             if(params[0] instanceof SmsData){
-
+                currentObject = "smsData";
                 SmsData smsData = (SmsData) params[0];
                 Log.e("Total_Caisse ", smsData.getDate());
                 formBody =   new FormBody.Builder()
@@ -232,6 +213,7 @@ public class IncomingSms extends BroadcastReceiver {
                         .build();
 
             } else if (params[0] instanceof MessagesOperatuerData){
+                currentObject = "messagesOperatuerData";
                 MessagesOperatuerData messagesOperatuerData = (MessagesOperatuerData) params[0];
                 formBody =   new FormBody.Builder()
                         .add("date", messagesOperatuerData.getDate())
@@ -268,6 +250,20 @@ public class IncomingSms extends BroadcastReceiver {
             super.onPostExecute(s);
             Log.e(TAG, s);
             Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+            if(s.equals("New record created successfully")){
+                switch (currentObject){
+                    case "smsData":
+                        System.out.println("I am here too");
+                        databaseHandler.updateIsOnlineRapportJournalierTrue(currentSqliteId);
+                        break;
+                    case "messagesOperatuerData":
+                        databaseHandler.updateIsOnlineMessagesOperatuerTrue(currentSqliteId);
+                        break;
+                    default:
+                        System.out.println("invalid case");
+                        break;
+                }
+            }
         }
     }
 

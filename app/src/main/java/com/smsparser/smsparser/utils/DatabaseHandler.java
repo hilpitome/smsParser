@@ -21,7 +21,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper{
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     // Database Name
     private static final String DATABASE_NAME = "rapportManager";
@@ -32,6 +32,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     // Common Table Columns names
     private static final String ID = "_id";
     private static final String SD_NUMBER = "sd_number";
+    private static final String IS_ONLINE = "is_online";
 
     // rapport_journalier column names
 
@@ -56,11 +57,11 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_RAPPORT_TABLE = "CREATE TABLE " + TABLE_RAPPORT_JOURNALIER  + "("
                 + ID + " INTEGER PRIMARY KEY," + DATE + " TEXT,"+ SD_NUMBER + " TEXT,"
-                + CASH_RECU + " TEXT," + VENTE_SERVEUR  + " TEXT," +TOTAL_CAISSE + " TEXT"+")";
+                + CASH_RECU + " TEXT," + VENTE_SERVEUR  + " TEXT," +TOTAL_CAISSE + " TEXT,"+IS_ONLINE+" TEXT NOT NULL DEFAULT 'false'"+")";
 
         String CREATE_TABLE_MESSAGES_OPERATUER = "CREATE TABLE " + TABLE_MESSAGES_OPERATUER  + "("
                 + ID + " INTEGER PRIMARY KEY," + DATE + " TEXT,"
-                + PHONE_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT,"+ SIM_NUMBER+ " TEXT,"+MESSAGE+" TEXT"+")";
+                + PHONE_NUMBER+ " TEXT," + TITLE  + " TEXT," +DESCRIPTION+ " TEXT,"+ SIM_NUMBER+ " TEXT,"+MESSAGE+" TEXT,"+IS_ONLINE+" TEXT NOT NULL DEFAULT 'false'"+")";
         sqLiteDatabase.execSQL(CREATE_RAPPORT_TABLE);
         sqLiteDatabase.execSQL(CREATE_TABLE_MESSAGES_OPERATUER);
 
@@ -77,7 +78,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         onCreate(sqLiteDatabase);
     }
     // add a new row
-    public void addParsedSmsData(SmsData smsData){
+    public long addParsedSmsData(SmsData smsData){
 
         SQLiteDatabase db = getWritableDatabase();
 
@@ -88,8 +89,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         contentValues.put(VENTE_SERVEUR,smsData.getVenteServuer());
         contentValues.put(DATE, smsData.getDate());
 
-        db.insert(TABLE_RAPPORT_JOURNALIER , null, contentValues);
+        long id = db.insert(TABLE_RAPPORT_JOURNALIER , null, contentValues);
         db.close();
+
+        return id;
     }
     public List<SmsData> getSmsRapportData(){
 
@@ -116,7 +119,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         return records;
     }
 
-    public void addMessagesOperatuer(MessagesOperatuerData messagesOperatuerData){
+    public long addMessagesOperatuer(MessagesOperatuerData messagesOperatuerData){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -127,8 +130,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         contentValues.put(SIM_NUMBER, messagesOperatuerData.getSimNumber());
         contentValues.put(MESSAGE, messagesOperatuerData.getMessage());
 
-        db.insert(TABLE_MESSAGES_OPERATUER , null, contentValues);
+        long id = db.insert(TABLE_MESSAGES_OPERATUER , null, contentValues);
         db.close();
+        return id;
     }
 
     public List<MessagesOperatuerData> getMessagesOperatuer(){
@@ -153,5 +157,88 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         return  records;
     }
+    public List<Object> getOfflineRapportAndOperetuerRecords(){
+
+        List<Object> offlineTransferAndWithdrawalData = new ArrayList<>();
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_RAPPORT_JOURNALIER+" WHERE "+IS_ONLINE+" = ?", new String[] {"false"});
+        Cursor cursor2 = sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_MESSAGES_OPERATUER+" WHERE "+IS_ONLINE+" = ?", new String[] {"false"});
+        while (cursor.moveToNext()){
+
+            SmsData smsData = new SmsData();
+            String date = cursor.getString(cursor.getColumnIndex(DATE));
+            String sdNumber = cursor.getString(cursor.getColumnIndex(SD_NUMBER));
+            String cashRecu = cursor.getString(cursor.getColumnIndex(CASH_RECU));
+            int venteServuer = cursor.getInt(cursor.getColumnIndex(VENTE_SERVEUR));
+            int totalCaise = cursor.getInt(cursor.getColumnIndex(TOTAL_CAISSE));
+            int sqliteId = cursor.getInt(cursor.getColumnIndex(ID));
+
+            smsData.setDate(date);
+            smsData.setSdNumber(sdNumber);
+            smsData.setCashRecu(cashRecu);
+            smsData.setVenteServuer(String.valueOf(venteServuer));
+            smsData.setTotalCaisse(String.valueOf(totalCaise));
+            smsData.setSqliteId(sqliteId);
+
+            offlineTransferAndWithdrawalData.add(smsData);
+        }
+
+        while (cursor2.moveToNext()){
+            MessagesOperatuerData messagesOperatuerData = new MessagesOperatuerData();
+
+            String date = cursor2.getString(cursor2.getColumnIndex(DATE));
+            String title = cursor2.getString(cursor2.getColumnIndex(TITLE));
+            String description = cursor2.getString(cursor2.getColumnIndex(DESCRIPTION));
+            String phoneNumber = cursor2.getString(cursor2.getColumnIndex(PHONE_NUMBER));
+            String simNumber = cursor2.getString(cursor2.getColumnIndex(SIM_NUMBER));
+            String message = cursor2.getString(cursor2.getColumnIndex(MESSAGE));
+            int sqliteId = cursor2.getInt(cursor2.getColumnIndex(ID));
+
+            messagesOperatuerData.setDate(date);
+            messagesOperatuerData.setTitle(title);
+            messagesOperatuerData.setDescription(description);
+            messagesOperatuerData.setPhoneNumber(phoneNumber);
+            messagesOperatuerData.setSimNumber(simNumber);
+            messagesOperatuerData.setMessage(message);
+            messagesOperatuerData.setSqliteId(sqliteId);
+
+            offlineTransferAndWithdrawalData.add(messagesOperatuerData);
+
+
+
+
+        }
+
+        cursor.close();
+        cursor2.close();
+
+        sqLiteDatabase.close();
+
+        return offlineTransferAndWithdrawalData;
+    }
+
+    public void updateIsOnlineRapportJournalierTrue(int id){
+        Log.e("settrue", String.valueOf(id));
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(IS_ONLINE, "true");
+
+        db.update(TABLE_RAPPORT_JOURNALIER, cv,ID+" = ?" ,new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public void updateIsOnlineMessagesOperatuerTrue(int id){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(IS_ONLINE, "true");
+
+        db.update(TABLE_MESSAGES_OPERATUER, cv,ID+" = ?" ,new String[]{String.valueOf(id)});
+        db.close();
+
+    }
+
+
+
 
 }
