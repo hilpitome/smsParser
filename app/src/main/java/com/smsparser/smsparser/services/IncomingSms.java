@@ -125,7 +125,7 @@ public class IncomingSms extends BroadcastReceiver {
                         }
                         if (message.toLowerCase().contains("montant maximum autorise")){
                             title = "Total maximum par mois";
-                            description = "Le cumul des montants de transaction a atteint le maximum pour le mois";
+                            description = "Le cumul des montants de transactions a atteint le maximum pour le mois";
                         }
 
                         // split message/description to find date and phone number
@@ -241,8 +241,6 @@ public class IncomingSms extends BroadcastReceiver {
 
             return resp;
         }
-
-
 
 
         @Override
