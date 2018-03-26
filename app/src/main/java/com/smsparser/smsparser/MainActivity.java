@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 fragment = new MessagesOperatuerFragment();
                 title = getResources().getString(sms_operateur);
                 break;
+            case R.id.drawer_add_phone_no:
+                startActivity(new Intent(getApplicationContext(), PhoneNumberActivity.class));
+                break;
             default:
                 break;
         }

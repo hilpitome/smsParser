@@ -13,6 +13,10 @@
             android:id="@+id/drawer_sms_msg_operateur"
             android:title="@string/mesages_operatuer_title_text"/>
 
+        <item
+            android:id="@+id/drawer_add_phone_no"
+            android:title="@string/update_phone_number"/>
+
 
     </group>
 </menu>

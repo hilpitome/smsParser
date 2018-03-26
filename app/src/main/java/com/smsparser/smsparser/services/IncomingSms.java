@@ -82,13 +82,17 @@ public class IncomingSms extends BroadcastReceiver {
                         String yyyy = unformateDate.substring(4,8);
 
                         String formatedDate = dd+"-"+mm+"-"+yyyy;
+                        String sdNumber = senderNo;
+                        String cashRecu = messageArray[2];
+                        String venteServuer = messageArray[3];
+                        String totalCaisse = messageArray[4];
 
                         SmsData smsData = new SmsData(
                                 formatedDate,
-                                senderNo,
-                                messageArray[2],
-                                messageArray[3],
-                                messageArray[4]
+                                sdNumber,
+                                cashRecu,
+                                venteServuer,
+                                totalCaisse
                         );
 
 

@@ -61,10 +61,6 @@ public class PrefUtils {
         editor.commit();
     }
 
-
-
-
-
     public void setSimNUmber(String simNUmber){
         editor.putString(KEY_SIM_NUMBER, simNUmber);
         editor.commit();
